@@ -24,3 +24,14 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* スクロールバーのスタイリング */
+.custom-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edgeで非表示 */
+}
+
+/* スマホでのタッチスクロールを滑らかに */
+.custom-scrollbar {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
