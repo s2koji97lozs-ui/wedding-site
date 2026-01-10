@@ -5,25 +5,29 @@ import { content } from "@/data/content";
 export const BestShots = () => {
   const { bestShots } = content;
 
+  // Bento風レイアウト: インデックス0と3を大きく表示
+  const isLargeCard = (index: number) => index === 0 || index === 3;
+
   return (
     <Section className="bg-gray-50">
-      <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-center mb-12 text-gray-900">
+      <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-center mb-8 text-gray-900">
         {bestShots.heading}
       </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-[300px]">
+      <div className="grid grid-cols-2 gap-2 md:gap-3">
         {bestShots.images.map((img, i) => (
           <div
             key={i}
-            className={`relative rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-500 group ${
-              i === 0 ? "md:col-span-2 md:row-span-2" : ""
-            }`}
+            className={`relative rounded-lg overflow-hidden group ${isLargeCard(i) ? "col-span-2 aspect-[16/10]" : "aspect-square"
+              }`}
+            style={{ minHeight: isLargeCard(i) ? 200 : 120 }}
           >
             <Image
               src={img.src}
               alt={img.alt}
               fill
-              className="object-cover transition-transform duration-700 group-hover:scale-105"
+              sizes={isLargeCard(i) ? "100vw" : "50vw"}
+              className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
             />
           </div>
         ))}
