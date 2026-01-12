@@ -1,6 +1,32 @@
+'use client';
+
+import { useState } from 'react';
 import Image from "next/image";
 import { Section } from "@/components/ui/Section";
 import { content } from "@/data/content";
+
+// フェードイン付きImage
+const FadeImage = ({ src, alt, sizes, priority = false }: {
+  src: string;
+  alt: string;
+  sizes: string;
+  priority?: boolean;
+}) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      fill
+      sizes={sizes}
+      priority={priority}
+      className={`object-cover transition-opacity duration-700 ${isLoaded ? 'opacity-100' : 'opacity-0'
+        }`}
+      onLoad={() => setIsLoaded(true)}
+    />
+  );
+};
 
 export const BestShots = () => {
   const { bestShots } = content;
@@ -18,16 +44,15 @@ export const BestShots = () => {
         {bestShots.images.map((img, i) => (
           <div
             key={i}
-            className={`relative rounded-lg overflow-hidden group ${isLargeCard(i) ? "col-span-2 aspect-[16/10]" : "aspect-square"
+            className={`relative rounded-lg overflow-hidden bg-gray-100 ${isLargeCard(i) ? "col-span-2 aspect-[16/10]" : "aspect-square"
               }`}
             style={{ minHeight: isLargeCard(i) ? 200 : 120 }}
           >
-            <Image
+            <FadeImage
               src={img.src}
               alt={img.alt}
-              fill
               sizes={isLargeCard(i) ? "100vw" : "50vw"}
-              className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+              priority={i < 2}
             />
           </div>
         ))}

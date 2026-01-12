@@ -28,7 +28,7 @@ export interface VideoConfig {
 }
 
 // Movie Source (Discriminated Union)
-export type MovieSource = 
+export type MovieSource =
   | { mode: 'file'; url: string; config: VideoConfig } // MP4直リンク
   | { mode: 'youtube'; videoId: string };              // YouTube
 
@@ -111,7 +111,7 @@ export const content: SiteContent = {
   },
   hero: {
     title: "Koji & Shiori",
-    subTitle: "2025.11.03 — PALACE HOTEL, TOKYO",
+    subTitle: "2025.11.03 — PALACE HOTEL TOKYO",
     bgImage: { src: "/images/hero-bg.jpg", alt: "Main Visual" },
   },
   intro: {
@@ -147,7 +147,7 @@ export const content: SiteContent = {
     */
   },
   bestShots: {
-    heading: "Highlights",
+    heading: "The Day",
     images: [
       { src: "/images/best-1.jpg", alt: "Scene 1" },
       { src: "/images/best-2.jpg", alt: "Scene 2" },
@@ -159,50 +159,50 @@ export const content: SiteContent = {
     heading: "Guest Perspective",
     description: "たくさんの写真と動画をありがとうございます",
     images: [
-      { 
-        src: "/images/guest-1.jpg", 
+      {
+        src: "/images/guest-1.jpg",
         alt: "Guest 1",
         photographer: "Photographer Name",
         comment: "A beautiful moment captured during the celebration"
       },
-      { 
-        src: "/images/guest-2.jpg", 
+      {
+        src: "/images/guest-2.jpg",
         alt: "Guest 2",
         photographer: "Photographer Name",
         comment: "Thank you for sharing this special day with us"
       },
-      { 
-        src: "/images/guest-3.jpg", 
+      {
+        src: "/images/guest-3.jpg",
         alt: "Guest 3",
         photographer: "Photographer Name",
         comment: "Memories that will last a lifetime"
       },
-      { 
-        src: "/images/guest-4.jpg", 
+      {
+        src: "/images/guest-4.jpg",
         alt: "Guest 4",
         photographer: "Photographer Name",
         comment: "Wishing you both a lifetime of happiness"
       },
-      { 
-        src: "/images/guest-5.jpg", 
+      {
+        src: "/images/guest-5.jpg",
         alt: "Guest 5",
         photographer: "Photographer Name",
         comment: "Congratulations on your special day"
       },
-      { 
-        src: "/images/guest-6.jpg", 
+      {
+        src: "/images/guest-6.jpg",
         alt: "Guest 5",
         photographer: "Photographer Name",
         comment: "Congratulations on your special day"
       },
-      { 
-        src: "/images/guest-7.jpg", 
+      {
+        src: "/images/guest-7.jpg",
         alt: "Guest 5",
         photographer: "Photographer Name",
         comment: "Congratulations on your special day"
       },
-      { 
-        src: "/images/guest-8.jpg", 
+      {
+        src: "/images/guest-8.jpg",
         alt: "Guest 5",
         photographer: "Photographer Name",
         comment: "Congratulations on your special day"
@@ -214,7 +214,7 @@ export const content: SiteContent = {
     viewGallery: {
       type: 'view',
       title: "The Gallery",
-      description: "プロ撮影の写真ギャラリー",
+      description: "プロ撮影の写真",
       bgImage: { src: "/images/link-view.jpg", alt: "View Bg" },
       button: {
         label: "View Gallery",
@@ -225,7 +225,7 @@ export const content: SiteContent = {
     downloadData: {
       type: 'download',
       title: "Downloads",
-      description: "共有写真・ダウンロード",
+      description: "共有写真",
       bgImage: { src: "/images/link-download.jpg", alt: "Download Bg" },
       button: {
         label: "Download All",
