@@ -11,9 +11,15 @@ interface PinGateProps {
 
 // 重要な画像をプリフェッチ
 const prefetchImages = async () => {
+  // プリフェッチ対象を拡大: Hero + BestShots全て + GuestPerspective最初の4枚
+  const guestImages = content.guestPerspectives.cards
+    .slice(0, 4)
+    .map(card => card.photo.src);
+
   const imagesToPrefetch = [
     content.hero.bgImage.src,
-    ...content.bestShots.images.slice(0, 2).map(img => img.src),
+    ...content.bestShots.images.map(img => img.src),
+    ...guestImages,
   ];
 
   const promises = imagesToPrefetch.map((src) => {
@@ -25,10 +31,10 @@ const prefetchImages = async () => {
     });
   });
 
-  // 最低1秒は表示
+  // 最低1.5秒は表示（画像読み込み完了を待つ）
   await Promise.all([
     Promise.all(promises),
-    new Promise(resolve => setTimeout(resolve, 1200)),
+    new Promise(resolve => setTimeout(resolve, 1500)),
   ]);
 };
 
