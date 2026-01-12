@@ -170,7 +170,7 @@ export const content: SiteContent = {
   },
   guestPerspectives: {
     heading: "Guest Perspective",
-    description: "Every frame, a gift from you",
+    description: "たくさんの写真・動画ありがとうございました！",
     cards: [
       // ベストショット枠
       {
@@ -257,7 +257,7 @@ export const content: SiteContent = {
         photo: { src: "/images/SS13.jpg", alt: "test" },
         name: "GUMPE",
         caption: "Moments Archivist",
-      },
+      }
     ],
   },
   links: {
