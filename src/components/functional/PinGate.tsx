@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, FormEvent, ReactNode, useEffect } from 'react';
+import { useState, FormEvent, ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { content } from '@/data/content';
 import { LoadingOverlay } from '@/components/ui/LoadingOverlay';
@@ -9,33 +9,17 @@ interface PinGateProps {
   children: ReactNode;
 }
 
-// 重要な画像をプリフェッチ
-const prefetchImages = async () => {
-  // プリフェッチ対象を拡大: Hero + BestShots全て + GuestPerspective最初の4枚
+// プリフェッチ対象画像のリストを取得
+const getImagesToPreload = () => {
   const guestImages = content.guestPerspectives.cards
-    .slice(0, 4)
+    .slice(0, 6) // 最初の6枚をプリロード
     .map(card => card.photo.src);
 
-  const imagesToPrefetch = [
+  return [
     content.hero.bgImage.src,
     ...content.bestShots.images.map(img => img.src),
     ...guestImages,
   ];
-
-  const promises = imagesToPrefetch.map((src) => {
-    return new Promise<void>((resolve) => {
-      const img = new window.Image();
-      img.onload = () => resolve();
-      img.onerror = () => resolve(); // エラーでも続行
-      img.src = src;
-    });
-  });
-
-  // 最低1.5秒は表示（画像読み込み完了を待つ）
-  await Promise.all([
-    Promise.all(promises),
-    new Promise(resolve => setTimeout(resolve, 1500)),
-  ]);
 };
 
 export default function PinGate({ children }: PinGateProps) {
@@ -46,10 +30,49 @@ export default function PinGate({ children }: PinGateProps) {
   const [isReady, setIsReady] = useState(!security.enabled);
   const [error, setError] = useState('');
 
+  // 進捗追跡
+  const [loadedCount, setLoadedCount] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
+  const [progress, setProgress] = useState(0);
+
   // セキュリティが無効な場合は直接子コンポーネントを表示
   if (!security.enabled) {
     return <>{children}</>;
   }
+
+  // 画像をプリフェッチ（進捗付き）
+  const prefetchImagesWithProgress = async () => {
+    const imagesToPrefetch = getImagesToPreload();
+    setTotalCount(imagesToPrefetch.length);
+    setLoadedCount(0);
+    setProgress(0);
+
+    let loaded = 0;
+
+    const promises = imagesToPrefetch.map((src) => {
+      return new Promise<void>((resolve) => {
+        const img = new window.Image();
+        img.onload = () => {
+          loaded++;
+          setLoadedCount(loaded);
+          setProgress(Math.round((loaded / imagesToPrefetch.length) * 100));
+          resolve();
+        };
+        img.onerror = () => {
+          loaded++;
+          setLoadedCount(loaded);
+          setProgress(Math.round((loaded / imagesToPrefetch.length) * 100));
+          resolve();
+        };
+        img.src = src;
+      });
+    });
+
+    await Promise.all(promises);
+
+    // 100%表示を少し見せる
+    await new Promise(resolve => setTimeout(resolve, 500));
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -60,8 +83,8 @@ export default function PinGate({ children }: PinGateProps) {
       setIsLoading(true);
       setPin('');
 
-      // 画像プリフェッチ
-      await prefetchImages();
+      // 画像プリフェッチ（進捗付き）
+      await prefetchImagesWithProgress();
 
       setIsLoading(false);
       setIsReady(true);
@@ -130,7 +153,12 @@ export default function PinGate({ children }: PinGateProps) {
       )}
 
       {isAuthenticated && isLoading && (
-        <LoadingOverlay isVisible={true} />
+        <LoadingOverlay
+          isVisible={true}
+          progress={progress}
+          loadedCount={loadedCount}
+          totalCount={totalCount}
+        />
       )}
 
       {isAuthenticated && isReady && (
