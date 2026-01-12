@@ -255,7 +255,7 @@ export const content: SiteContent = {
       {
         type: 'specialThanks',
         photo: { src: "/images/SS13.jpg", alt: "test" },
-        name: "GUMPEI",
+        name: "GUMPE",
         caption: "Moments Archivist",
       },
     ],
@@ -269,6 +269,6 @@ export const content: SiteContent = {
   },
   footer: {
     copyright: "© 2025 Koji & Shiori",
-    expiryDate: "Available until NovemberFebruary 2026",
+    expiryDate: "Available until February 2026",
   },
 };

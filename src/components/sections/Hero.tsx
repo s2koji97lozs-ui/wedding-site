@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 import { content } from '@/data/content';
 
 export const Hero = () => {
@@ -11,7 +12,12 @@ export const Hero = () => {
   return (
     <div className="relative h-screen w-full overflow-hidden">
       {/* Background Image */}
-      <div className="absolute inset-0 z-0">
+      <motion.div
+        className="absolute inset-0 z-0"
+        initial={{ scale: 1.1, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 1.2, ease: 'easeOut' }}
+      >
         <Image
           src={hero.bgImage.src}
           alt={hero.bgImage.alt}
@@ -22,16 +28,26 @@ export const Hero = () => {
           onLoad={() => setIsLoaded(true)}
         />
         <div className="absolute inset-0 bg-black/30" />
-      </div>
+      </motion.div>
 
       {/* Content */}
       <div className="relative z-10 flex h-full flex-col items-center justify-center text-center text-white px-4">
-        <h1 className="text-5xl md:text-7xl font-bold tracking-tighter mb-4 drop-shadow-lg">
+        <motion.h1
+          className="text-5xl md:text-7xl font-bold tracking-tighter mb-4 drop-shadow-lg"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3, ease: 'easeOut' }}
+        >
           {hero.title}
-        </h1>
-        <p className="text-sm md:text-lg font-light tracking-[0.2em] uppercase opacity-90 whitespace-nowrap">
+        </motion.h1>
+        <motion.p
+          className="text-sm md:text-lg font-light tracking-[0.2em] uppercase opacity-90 whitespace-nowrap"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.5, ease: 'easeOut' }}
+        >
           {hero.subTitle}
-        </p>
+        </motion.p>
       </div>
     </div>
   );
