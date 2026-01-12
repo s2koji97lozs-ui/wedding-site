@@ -90,16 +90,20 @@ const SpecialThanksCard = ({ card }: { card: Extract<GuestPerspectiveCard, { typ
 
     return (
         <Reveal>
-            <div className="bg-gray-50 rounded-xl p-4 flex items-center gap-4 shadow-sm border border-gray-100 min-w-[280px] md:min-w-[320px] flex-none snap-center">
-                {/* 顔写真 */}
-                <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden flex-shrink-0 bg-gray-200">
+            <div className="bg-gray-50 rounded-xl p-5 flex items-center gap-4 shadow-sm border border-gray-100 min-w-[280px] md:min-w-[320px] flex-none snap-center">
+                {/* 顔写真 - 長押し保存防止 */}
+                <div
+                    className="relative w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden flex-shrink-0 bg-gray-200 select-none"
+                    onContextMenu={(e) => e.preventDefault()}
+                >
                     <Image
                         src={card.photo.src}
                         alt={card.photo.alt}
                         fill
-                        sizes="80px"
-                        className={`object-cover object-center transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+                        sizes="96px"
+                        className={`object-cover object-center transition-opacity duration-500 pointer-events-none ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
                         onLoad={() => setIsLoaded(true)}
+                        draggable={false}
                     />
                 </div>
                 {/* テキスト */}
