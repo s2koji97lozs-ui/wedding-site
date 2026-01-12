@@ -131,9 +131,9 @@ export const content: SiteContent = {
     heading: "Thank You",
     paragraphs: [
       "私たちの新しい門出を見守っていただき",
-      "心より感謝申し上げます。",
+      "心より感謝申し上げます",
       "当日の温かな時間を",
-      "映像と写真に込めました。",
+      "映像と写真に込めました",
     ],
   },
   movie: {
@@ -238,25 +238,25 @@ export const content: SiteContent = {
         type: 'specialThanks',
         photo: { src: "/images/SS10.jpg", alt: "test" },
         name: "CHA",
-        caption: "Moments Archivist",
+        caption: "So Many Photos!",
       },
       {
         type: 'specialThanks',
         photo: { src: "/images/SS11.jpg", alt: "test" },
         name: "NAOKI",
-        caption: "Moments Archivist",
+        caption: "So Many Photos!",
       },
       {
         type: 'specialThanks',
         photo: { src: "/images/SS12.jpg", alt: "test" },
         name: "TAMAO",
-        caption: "Moments Archivist",
+        caption: "So Many Photos!",
       },
       {
         type: 'specialThanks',
         photo: { src: "/images/SS13.jpg", alt: "test" },
-        name: "GUMPE",
-        caption: "Moments Archivist",
+        name: "GUMPEI",
+        caption: "So Many Movies!",
       }
     ],
   },

@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { Reveal } from '@/components/ui/Reveal';
 import { content, GuestPerspectiveCard } from '@/data/content';
 
-// ベストショットカード
+// ベストショットカード - 深みのあるプレミアムデザイン
 const BestShotCard = ({ card }: { card: Extract<GuestPerspectiveCard, { type: 'bestShot' }> }) => {
     const [isLoaded, setIsLoaded] = useState(false);
     const [orientation, setOrientation] = useState<'portrait' | 'landscape' | 'square'>('portrait');
@@ -21,109 +21,100 @@ const BestShotCard = ({ card }: { card: Extract<GuestPerspectiveCard, { type: 'b
         image.src = card.photo.src;
     }, [card.photo.src]);
 
-    // 高さ統一アプローチ
-    const getCardDimensions = () => {
-        const heightMobile = 70;
-        const heightDesktop = 450;
-
+    // 高さ統一、幅は可変
+    const getCardStyle = () => {
+        const baseHeight = 'min(75vw, 480px)';
         switch (orientation) {
             case 'landscape':
-                return {
-                    width: `min(88vw, ${heightDesktop * 16 / 10}px)`,
-                    height: `min(${heightMobile}vw, ${heightDesktop}px)`,
-                };
+                return { width: 'min(90vw, 720px)', height: baseHeight };
             case 'square':
-                return {
-                    width: `min(${heightMobile}vw, ${heightDesktop}px)`,
-                    height: `min(${heightMobile}vw, ${heightDesktop}px)`,
-                };
+                return { width: baseHeight, height: baseHeight };
             default:
-                return {
-                    width: `min(${heightMobile * 3 / 4}vw, ${heightDesktop * 3 / 4}px)`,
-                    height: `min(${heightMobile}vw, ${heightDesktop}px)`,
-                };
+                return { width: 'min(56vw, 360px)', height: baseHeight };
         }
     };
 
-    const dimensions = getCardDimensions();
+    const style = getCardStyle();
 
     return (
-        <Reveal>
+        <div
+            className="relative flex-shrink-0 rounded-2xl overflow-hidden shadow-2xl"
+            style={{
+                width: style.width,
+                height: style.height,
+            }}
+        >
+            {/* 背景のぼかし効果 */}
+            <div className="absolute inset-0 bg-gradient-to-br from-gray-900/5 to-gray-900/20" />
+
+            <Image
+                src={card.photo.src}
+                alt={card.photo.alt}
+                fill
+                sizes="(max-width: 768px) 90vw, 720px"
+                className={`object-cover transition-opacity duration-700 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+                onLoad={() => setIsLoaded(true)}
+            />
+
+            {/* グラデーションオーバーレイ */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+
+            {/* コンテンツ */}
+            <div className="absolute bottom-0 left-0 right-0 p-6">
+                <p className="text-white/60 text-[10px] font-medium tracking-[0.2em] uppercase mb-2">
+                    Photo by {card.photographer}
+                </p>
+                <h3 className="text-white text-2xl md:text-3xl font-bold tracking-tight">
+                    {card.title}
+                </h3>
+                {card.description && (
+                    <p className="text-white/70 text-sm font-light mt-2 leading-relaxed">
+                        {card.description}
+                    </p>
+                )}
+            </div>
+        </div>
+    );
+};
+
+// Specialサンクスカード - 視認性向上
+const SpecialThanksCard = ({ card }: { card: Extract<GuestPerspectiveCard, { type: 'specialThanks' }> }) => {
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    return (
+        <div className="bg-white rounded-2xl p-5 flex items-center gap-4 shadow-lg border border-gray-100 flex-shrink-0 w-[300px] md:w-[340px]">
+            {/* 顔写真 - アクセントボーダー */}
             <div
-                className="relative rounded-2xl overflow-hidden bg-white shadow-sm flex-none snap-center"
-                style={{
-                    width: dimensions.width,
-                    height: dimensions.height,
-                    scrollSnapStop: 'always',
-                }}
+                className="relative w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-gray-100 ring-offset-2 select-none"
+                onContextMenu={(e) => e.preventDefault()}
             >
                 <Image
                     src={card.photo.src}
                     alt={card.photo.alt}
                     fill
-                    sizes="(max-width: 768px) 88vw, 720px"
-                    className={`object-cover transition-opacity duration-700 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+                    sizes="80px"
+                    className={`object-cover object-center transition-opacity duration-500 pointer-events-none ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
                     onLoad={() => setIsLoaded(true)}
+                    draggable={false}
                 />
-                {/* オーバーレイ */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-5">
-                    <p className="text-white/70 text-xs font-medium mb-1 tracking-wide uppercase">
-                        Photo by {card.photographer}
-                    </p>
-                    <h3 className="text-white text-xl md:text-2xl font-bold tracking-tight mb-1">
-                        {card.title}
-                    </h3>
-                    {card.description && (
-                        <p className="text-white/80 text-sm font-light leading-relaxed">
-                            {card.description}
-                        </p>
-                    )}
-                </div>
             </div>
-        </Reveal>
-    );
-};
 
-// Specialサンクスカード
-const SpecialThanksCard = ({ card }: { card: Extract<GuestPerspectiveCard, { type: 'specialThanks' }> }) => {
-    const [isLoaded, setIsLoaded] = useState(false);
-
-    return (
-        <Reveal>
-            <div className="bg-gray-50 rounded-xl p-5 flex items-center gap-4 shadow-sm border border-gray-100 min-w-[280px] md:min-w-[320px] flex-none snap-center">
-                {/* 顔写真 - 長押し保存防止 */}
-                <div
-                    className="relative w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden flex-shrink-0 bg-gray-200 select-none"
-                    onContextMenu={(e) => e.preventDefault()}
-                >
-                    <Image
-                        src={card.photo.src}
-                        alt={card.photo.alt}
-                        fill
-                        sizes="96px"
-                        className={`object-cover object-center transition-opacity duration-500 pointer-events-none ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
-                        onLoad={() => setIsLoaded(true)}
-                        draggable={false}
-                    />
-                </div>
-                {/* テキスト */}
-                <div className="flex-1 min-w-0">
-                    <h3 className="text-gray-900 text-base md:text-lg font-semibold truncate">
-                        {card.name}
-                    </h3>
-                    <p className="text-gray-500 text-sm font-light leading-snug mt-1">
-                        {card.caption}
-                    </p>
-                </div>
+            {/* テキスト - フォントウェイト強化 */}
+            <div className="flex-1 min-w-0">
+                <h3 className="text-gray-900 text-lg font-bold tracking-tight truncate">
+                    {card.name}
+                </h3>
+                <p className="text-gray-400 text-sm font-medium mt-0.5">
+                    {card.caption}
+                </p>
             </div>
-        </Reveal>
+        </div>
     );
 };
 
 export const GuestPerspective = () => {
     const { guestPerspectives } = content;
 
-    // カードを種類別に分類
     const bestShotCards = guestPerspectives.cards.filter(
         (card): card is Extract<GuestPerspectiveCard, { type: 'bestShot' }> => card.type === 'bestShot'
     );
@@ -132,40 +123,39 @@ export const GuestPerspective = () => {
     );
 
     return (
-        <section className="py-20 bg-white overflow-hidden">
+        <section className="py-20 bg-gray-50">
             {/* ヘッダー */}
-            <Reveal className="px-6 max-w-5xl mx-auto mb-8">
-                <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-gray-900">
+            <Reveal className="px-6 max-w-5xl mx-auto mb-10">
+                <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-gray-900">
                     {guestPerspectives.heading}
                 </h2>
-                <p className="text-gray-500 mt-2 text-lg">
+                <p className="text-gray-500 mt-3 text-lg font-light">
                     {guestPerspectives.description}
                 </p>
             </Reveal>
 
             {/* ベストショット枠 - 横スクロール */}
             {bestShotCards.length > 0 && (
-                <div className="mb-12">
-                    <Reveal className="px-6 max-w-5xl mx-auto mb-4">
-                        <h3 className="text-lg font-medium text-gray-700 tracking-wide">
+                <div className="mb-16">
+                    <div className="px-6 max-w-5xl mx-auto mb-5">
+                        <h3 className="text-xs font-semibold text-gray-400 tracking-[0.2em] uppercase">
                             Best Shots
                         </h3>
-                    </Reveal>
+                    </div>
+
+                    {/* スクロールコンテナ - Peek効果付き */}
                     <div
-                        className="flex overflow-x-auto pb-6 gap-4 snap-x snap-mandatory"
+                        className="flex gap-5 overflow-x-auto pb-6 px-6 snap-x snap-mandatory"
                         style={{
                             scrollbarWidth: 'none',
-                            msOverflowStyle: 'none',
                             WebkitOverflowScrolling: 'touch',
-                            paddingLeft: '1.5rem',
-                            paddingRight: '1.5rem',
-                            scrollPaddingLeft: '1.5rem',
-                            scrollPaddingRight: '1.5rem',
                         }}
                     >
                         {bestShotCards.map((card, i) => (
                             <BestShotCard key={i} card={card} />
                         ))}
+                        {/* 右端のPeek用余白 */}
+                        <div className="flex-shrink-0 w-1" aria-hidden />
                     </div>
                 </div>
             )}
@@ -173,26 +163,25 @@ export const GuestPerspective = () => {
             {/* Specialサンクス枠 - 横スクロール */}
             {specialThanksCards.length > 0 && (
                 <div>
-                    <Reveal className="px-6 max-w-5xl mx-auto mb-4">
-                        <h3 className="text-lg font-medium text-gray-700 tracking-wide">
+                    <div className="px-6 max-w-5xl mx-auto mb-5">
+                        <h3 className="text-xs font-semibold text-gray-400 tracking-[0.2em] uppercase">
                             Special Thanks
                         </h3>
-                    </Reveal>
+                    </div>
+
+                    {/* スクロールコンテナ - Peek効果付き */}
                     <div
-                        className="flex overflow-x-auto pb-4 gap-3 snap-x snap-mandatory"
+                        className="flex gap-4 overflow-x-auto pb-4 px-6 snap-x snap-mandatory"
                         style={{
                             scrollbarWidth: 'none',
-                            msOverflowStyle: 'none',
                             WebkitOverflowScrolling: 'touch',
-                            paddingLeft: '1.5rem',
-                            paddingRight: '1.5rem',
-                            scrollPaddingLeft: '1.5rem',
-                            scrollPaddingRight: '1.5rem',
                         }}
                     >
                         {specialThanksCards.map((card, i) => (
                             <SpecialThanksCard key={i} card={card} />
                         ))}
+                        {/* 右端のPeek用余白 */}
+                        <div className="flex-shrink-0 w-1" aria-hidden />
                     </div>
                 </div>
             )}

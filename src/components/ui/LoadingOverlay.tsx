@@ -1,13 +1,20 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useMemo } from 'react';
 
 interface LoadingOverlayProps {
     isVisible: boolean;
-    progress?: number; // 0-100
+    progress?: number;
     loadedCount?: number;
     totalCount?: number;
 }
+
+const loadingTexts = [
+    'Loading Assets...',
+    'Preparing the Day...',
+    'Almost Ready...',
+];
 
 export const LoadingOverlay = ({
     isVisible,
@@ -15,6 +22,13 @@ export const LoadingOverlay = ({
     loadedCount = 0,
     totalCount = 0,
 }: LoadingOverlayProps) => {
+    // プログレスに応じてテキストを切り替え
+    const currentTextIndex = useMemo(() => {
+        if (progress < 40) return 0;
+        if (progress < 80) return 1;
+        return 2;
+    }, [progress]);
+
     if (!isVisible) return null;
 
     return (
@@ -24,46 +38,39 @@ export const LoadingOverlay = ({
             transition={{ duration: 0.8, ease: 'easeInOut' }}
             className="fixed inset-0 z-50 bg-white flex items-center justify-center"
         >
-            <div className="flex flex-col items-center w-full max-w-xs px-8">
-                {/* イニシャルロゴ with pulse animation */}
-                <motion.div
-                    className="relative"
-                    animate={{
-                        scale: [1, 1.05, 1],
-                        opacity: [0.7, 1, 0.7],
-                    }}
-                    transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: 'easeInOut',
-                    }}
-                >
-                    <div className="text-5xl md:text-6xl font-serif tracking-widest text-gray-800">
-                        K & S
-                    </div>
-                    <div className="absolute -bottom-1 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-400 to-transparent" />
-                </motion.div>
-
-                {/* Progress bar */}
-                <div className="w-full mt-10">
-                    <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
+            <div className="flex flex-col items-center w-full max-w-sm px-8">
+                {/* プログレスバー */}
+                <div className="w-full">
+                    {/* レール */}
+                    <div className="h-[3px] bg-gray-100 rounded-full overflow-hidden">
                         <motion.div
-                            className="h-full bg-gradient-to-r from-pink-400 to-rose-500 rounded-full"
+                            className="h-full bg-gray-900 rounded-full"
                             initial={{ width: 0 }}
                             animate={{ width: `${progress}%` }}
-                            transition={{ duration: 0.3, ease: 'easeOut' }}
+                            transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
                         />
                     </div>
 
-                    {/* Progress text */}
-                    <div className="mt-3 text-center">
-                        <p className="text-sm text-gray-500">
-                            Loading photos...
-                        </p>
-                        <p className="text-xs text-gray-400 mt-1">
-                            {loadedCount} / {totalCount}
-                        </p>
+                    {/* フェードテキスト */}
+                    <div className="mt-6 h-5 relative">
+                        <AnimatePresence mode="wait">
+                            <motion.p
+                                key={currentTextIndex}
+                                initial={{ opacity: 0, y: 8 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -8 }}
+                                transition={{ duration: 0.3 }}
+                                className="text-xs text-gray-400 tracking-widest uppercase text-center absolute inset-0"
+                            >
+                                {loadingTexts[currentTextIndex]}
+                            </motion.p>
+                        </AnimatePresence>
                     </div>
+
+                    {/* カウンター */}
+                    <p className="text-[10px] text-gray-300 tracking-wider text-center mt-2">
+                        {loadedCount} / {totalCount}
+                    </p>
                 </div>
             </div>
         </motion.div>

@@ -102,47 +102,42 @@ export default function PinGate({ children }: PinGateProps) {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5 }}
-          className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-blue-50 flex items-center justify-center p-4"
+          className="min-h-screen bg-white flex items-center justify-center p-4"
         >
           <div className="w-full max-w-md">
-            <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl border border-white/20 p-8 md:p-10">
-              {/* Header */}
-              <div className="text-center mb-8">
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2 tracking-tight">
-                  Welcome
-                </h2>
-                <p className="text-gray-600 text-sm md:text-base">
-                  {security.message}
-                </p>
+            <div className="bg-white rounded-2xl p-8 md:p-10">
+              {/* Header - Apple風ミニマルタイポグラフィ */}
+              <div className="text-center mb-12">
+                <h1 className="text-[11px] text-gray-400 tracking-[0.4em] uppercase font-medium">
+                  Private
+                </h1>
+                <div className="w-8 h-px bg-gray-200 mx-auto mt-4" />
               </div>
 
               {/* PIN Form */}
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <label htmlFor="pin" className="block text-sm font-medium text-gray-700 mb-2">
-                    PIN Code
-                  </label>
                   <input
                     id="pin"
                     type="password"
                     value={pin}
                     onChange={(e) => setPin(e.target.value)}
-                    placeholder="Enter PIN"
-                    className="w-full px-4 py-3 text-center text-2xl tracking-widest font-mono rounded-lg border-2 border-gray-300 focus:border-pink-400 focus:ring-2 focus:ring-pink-200 outline-none transition-all"
+                    placeholder="• • • •"
+                    className="w-full px-4 py-4 text-center text-2xl tracking-[0.5em] font-light rounded-lg border border-gray-200 focus:border-gray-400 focus:ring-0 outline-none transition-all bg-gray-50"
                     autoFocus
                     maxLength={10}
                   />
                 </div>
 
                 {error && (
-                  <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm text-center">
+                  <div className="text-gray-500 text-sm text-center">
                     {error}
                   </div>
                 )}
 
                 <button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white font-semibold py-3 px-6 rounded-lg hover:from-pink-600 hover:to-rose-600 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg shadow-pink-500/30"
+                  className="w-full bg-gray-900 text-white font-medium py-3.5 px-6 rounded-lg hover:bg-gray-800 transition-all duration-200 active:scale-[0.98]"
                 >
                   Enter
                 </button>
