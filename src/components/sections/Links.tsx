@@ -1,68 +1,92 @@
 'use client';
 
-import { Section } from '@/components/ui/Section';
-import { Button } from '@/components/ui/Button';
-import { Reveal } from '@/components/ui/Reveal';
+import { useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { content } from '@/data/content';
-
-// アイコンコンポーネント
-const GalleryIcon = () => (
-  <svg className="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-  </svg>
-);
-
-const DownloadIcon = () => (
-  <svg className="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
-  </svg>
-);
 
 export const Links = () => {
   const { links } = content;
-  const cards = [
-    { ...links.viewGallery, icon: <GalleryIcon /> },
-    { ...links.downloadData, icon: <DownloadIcon /> }
-  ];
+  const [isLoaded, setIsLoaded] = useState(false);
 
   return (
-    <Section className="bg-gray-50">
-      <Reveal>
-        <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-center mb-8 text-gray-900">
-          {links.heading}
-        </h2>
-      </Reveal>
+    <section className="py-16 md:py-24 px-6">
+      <Link
+        href={links.url}
+        target={links.isExternal ? '_blank' : undefined}
+        rel={links.isExternal ? 'noopener noreferrer' : undefined}
+        className="block max-w-5xl mx-auto"
+      >
+        <motion.div
+          className="relative w-full h-[50vh] md:h-[60vh] rounded-3xl overflow-hidden cursor-pointer"
+          whileHover={{
+            scale: 1.02,
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+          }}
+          transition={{
+            duration: 0.5,
+            ease: [0.25, 0.1, 0.25, 1]
+          }}
+        >
+          {/* Background Image with Zoom on Hover */}
+          <motion.div
+            className="absolute inset-0"
+            whileHover={{ scale: 1.1 }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
+          >
+            <Image
+              src={links.bgImage.src}
+              alt={links.bgImage.alt}
+              fill
+              sizes="(max-width: 768px) 100vw, 1024px"
+              priority
+              className={`object-cover transition-opacity duration-700 ${isLoaded ? 'opacity-100' : 'opacity-0'
+                }`}
+              onLoad={() => setIsLoaded(true)}
+            />
+            {/* Overlay for text readability */}
+            <div className="absolute inset-0 bg-black/40" />
+          </motion.div>
 
-      <div className="grid grid-cols-2 gap-3">
-        {cards.map((card, i) => (
-          <Reveal key={i} delay={i * 100}>
-            <div className="bg-white border border-gray-100 rounded-2xl p-4 md:p-6 flex flex-col items-center text-center h-full">
-              {/* Icon */}
-              <div className="w-12 h-12 mb-3 rounded-full bg-gray-50 flex items-center justify-center">
-                {card.icon}
-              </div>
+          {/* Content */}
+          <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-6">
+            <motion.h2
+              className="text-4xl md:text-6xl font-bold text-white tracking-tight mb-4"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              {links.heading}
+            </motion.h2>
+            <motion.p
+              className="text-base md:text-lg text-white/80 font-light tracking-wide"
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+            >
+              {links.subheading}
+            </motion.p>
 
-              {/* Title */}
-              <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-1">
-                {card.title}
-              </h3>
-
-              {/* Description */}
-              <p className="text-xs md:text-sm text-gray-500 mb-4 leading-relaxed">
-                {card.description}
-              </p>
-
-              {/* Button */}
-              <Button
-                href={card.button.url}
-                label={card.button.label}
-                isExternal={card.button.isExternal}
-                variant="primary"
-              />
-            </div>
-          </Reveal>
-        ))}
-      </div>
-    </Section>
+            {/* Arrow Icon */}
+            <motion.div
+              className="mt-8 w-12 h-12 rounded-full border-2 border-white/50 flex items-center justify-center"
+              whileHover={{ scale: 1.1, borderColor: 'rgba(255,255,255,0.9)' }}
+              transition={{ duration: 0.3 }}
+            >
+              <svg
+                className="w-5 h-5 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
+              </svg>
+            </motion.div>
+          </div>
+        </motion.div>
+      </Link>
+    </section>
   );
 };

@@ -2,7 +2,7 @@ import { Hero } from '@/components/sections/Hero';
 import { Intro } from '@/components/sections/Intro';
 import { Movie } from '@/components/sections/Movie';
 import { BestShots } from '@/components/sections/BestShots';
-import { GuestHighlights } from '@/components/sections/GuestHighlights';
+import { GuestPerspective } from '@/components/sections/GuestPerspective';
 import { Links } from '@/components/sections/Links';
 import { Footer } from '@/components/sections/Footer';
 import PinGate from '@/components/functional/PinGate'; // ※別途実装
@@ -16,7 +16,7 @@ export default function Home() {
         <Intro />
         <Movie />
         <BestShots />
-        <GuestHighlights />
+        <GuestPerspective />
         <Links />
         <Footer />
       </PinGate>
