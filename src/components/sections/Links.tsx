@@ -1,5 +1,8 @@
+'use client';
+
 import { Section } from '@/components/ui/Section';
 import { Button } from '@/components/ui/Button';
+import { Reveal } from '@/components/ui/Reveal';
 import { content } from '@/data/content';
 
 // アイコンコンポーネント
@@ -24,42 +27,42 @@ export const Links = () => {
 
   return (
     <Section className="bg-gray-50">
-      <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-center mb-8 text-gray-900">
-        {links.heading}
-      </h2>
+      <Reveal>
+        <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-center mb-8 text-gray-900">
+          {links.heading}
+        </h2>
+      </Reveal>
 
       <div className="grid grid-cols-2 gap-3">
         {cards.map((card, i) => (
-          <div
-            key={i}
-            className="bg-white border border-gray-100 rounded-2xl p-4 md:p-6 flex flex-col items-center text-center"
-          >
-            {/* Icon */}
-            <div className="w-12 h-12 mb-3 rounded-full bg-gray-50 flex items-center justify-center">
-              {card.icon}
+          <Reveal key={i} delay={i * 100}>
+            <div className="bg-white border border-gray-100 rounded-2xl p-4 md:p-6 flex flex-col items-center text-center h-full">
+              {/* Icon */}
+              <div className="w-12 h-12 mb-3 rounded-full bg-gray-50 flex items-center justify-center">
+                {card.icon}
+              </div>
+
+              {/* Title */}
+              <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-1">
+                {card.title}
+              </h3>
+
+              {/* Description */}
+              <p className="text-xs md:text-sm text-gray-500 mb-4 leading-relaxed">
+                {card.description}
+              </p>
+
+              {/* Button */}
+              <Button
+                href={card.button.url}
+                label={card.button.label}
+                isExternal={card.button.isExternal}
+                variant="primary"
+              />
             </div>
-
-            {/* Title */}
-            <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-1">
-              {card.title}
-            </h3>
-
-            {/* Description */}
-            <p className="text-xs md:text-sm text-gray-500 mb-4 leading-relaxed">
-              {card.description}
-            </p>
-
-            {/* Button */}
-            <Button
-              href={card.button.url}
-              label={card.button.label}
-              isExternal={card.button.isExternal}
-              variant="primary"
-            />
-          </div>
+          </Reveal>
         ))}
       </div>
     </Section>
   );
 };
-
